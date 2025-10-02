@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Categorias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            font-size: 1rem;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 107, 0.4);
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #fff5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        td {
+            padding: 16px 15px;
+            color: #555;
+            vertical-align: top;
+        }
+        
+        .id-column {
+            font-weight: bold;
+            color: #ff6b6b;
+            width: 80px;
+        }
+        
+        .name-column {
+            font-weight: 600;
+            color: #333;
+            width: 200px;
+        }
+        
+        .description-column {
+            color: #666;
+            line-height: 1.5;
+            max-width: 500px;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+        
+        .badge-eletronicos {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-vestuario {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .badge-casa {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .badge-esportes {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .badge-beleza {
+            background-color: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+            width: 150px;
+        }
+        
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn-edit {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .table-container {
+                border-radius: 8px;
+            }
+            
+            .name-column {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gerenciar Categorias</h1>
+            <p class="description">Organize e gerencie as categorias do seu catálogo de produtos</p>
+        </header>
+        
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" placeholder="Buscar categorias...">
+            </div>
+            <button class="btn-add">+ Nova Categoria</button>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id-column">101</td>
+                        <td class="name-column">
+                            <span class="category-badge badge-eletronicos">Eletrônicos</span>
+                        </td>
+                        <td class="description-column">Produtos eletrônicos em geral, incluindo smartphones, tablets, laptops, acessórios e dispositivos inteligentes para casa.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">102</td>
+                        <td class="name-column">
+                            <span class="category-badge badge-vestuario">Vestuário</span>
+                        </td>
+                        <td class="description-column">Roupas, calçados e acessórios para homens, mulheres e crianças de todas as idades e estilos.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">103</td>
+                        <td class="name-column">
+                            <span class="category-badge badge-casa">Casa e Decoração</span>
+                        </td>
+                        <td class="description-column">Itens para organização, decoração e utilidades domésticas, incluindo móveis, tapetes, cortinas e objetos de decoração.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">104</td>
+                        <td class="name-column">
+                            <span class="category-badge badge-esportes">Esportes</span>
+                        </td>
+                        <td class="description-column">Equipamentos, roupas e acessórios para diversas modalidades esportivas e atividades ao ar livre.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">105</td>
+                        <td class="name-column">
+                            <span class="category-badge badge-beleza">Beleza e Cuidados</span>
+                        </td>
+                        <td class="description-column">Produtos de beleza, higiene pessoal, cosméticos, perfumes e itens para cuidados com a pele e cabelos.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">106</td>
+                        <td class="name-column">
+                            <span class="category-badge badge-eletronicos">Livros</span>
+                        </td>
+                        <td class="description-column">Livros de diversos gêneros literários, didáticos, técnicos, revistas e publicações em geral.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gerenciamento de Categorias &copy; 2023 | Organize seu catálogo de forma eficiente</p>
+        </div>
+    </div>
+</body>
+</html>
