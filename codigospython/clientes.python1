@@ -1,0 +1,56 @@
+def validar_cpf(cpf):
+    """Valida se o CPF tem 11 dígitos após limpar"""
+    cpf_limpo = cpf.replace(".", "").replace("-", "")
+    return len(cpf_limpo) == 11 and cpf_limpo.isdigit()
+
+def validar_telefone(telefone):
+    """Valida se o telefone tem 11 dígitos após limpar"""
+    telefone_limpo = telefone.replace("(", "").replace(")", "").replace("-", "").replace(" ", "")
+    return len(telefone_limpo) == 11 and telefone_limpo.isdigit()
+
+def cadastrar_cliente():
+    print("=== CADASTRO DE CLIENTE ===")
+    
+    # Coletar nome
+    nome = input("Nome completo: ")
+    
+    # Coletar e validar CPF
+    while True:
+        cpf = input("CPF: ")
+        if validar_cpf(cpf):
+            cpf_limpo = cpf.replace(".", "").replace("-", "")
+            break
+        else:
+            print("❌ CPF deve conter exatamente 11 dígitos. Tente novamente.")
+    
+    # Coletar e validar telefone
+    while True:
+        telefone = input("Telefone: ")
+        if validar_telefone(telefone):
+            telefone_limpo = telefone.replace("(", "").replace(")", "").replace("-", "").replace(" ", "")
+            break
+        else:
+            print("❌ Telefone deve conter exatamente 11 dígitos. Tente novamente.")
+    
+    # Coletar outros dados
+    email = input("E-mail: ")
+    data_nascimento = input("Data de nascimento (YYYY-MM-DD): ")
+    
+    # Exibir dados limpos
+    print("\n=== DADOS CADASTRADOS ===")
+    print(f"Nome: {nome}")
+    print(f"E-mail: {email}")
+    print(f"Telefone: {telefone_limpo}")
+    print(f"CPF: {cpf_limpo}")
+    print(f"Data nascimento: {data_nascimento}")
+    
+    return {
+        'nome': nome,
+        'email': email,
+        'telefone': telefone_limpo,
+        'cpf': cpf_limpo,
+        'data_nascimento': data_nascimento
+    }
+
+# Executar cadastro
+cliente = cadastrar_cliente()
