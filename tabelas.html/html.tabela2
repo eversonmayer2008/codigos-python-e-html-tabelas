@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Endereços</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f0fff4;
+        }
+        
+        td {
+            padding: 14px 12px;
+            color: #555;
+        }
+        
+        .id-column {
+            font-weight: bold;
+            color: #11998e;
+        }
+        
+        .client-id-column {
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        .address-info {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-edit {
+            background-color: #ffc107;
+            color: #333;
+        }
+        
+        .btn-edit:hover {
+            background-color: #e0a800;
+        }
+        
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-view {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background-color: #138496;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .badge-primary {
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+        
+        .badge-secondary {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .table-container {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gerenciamento de Endereços</h1>
+            <p class="description">Visualize e gerencie os endereços cadastrados no sistema</p>
+        </header>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Endereço</th>
+                        <th>ID Cliente</th>
+                        <th>Logradouro</th>
+                        <th>Número</th>
+                        <th>Complemento</th>
+                        <th>Bairro</th>
+                        <th>Cidade</th>
+                        <th>Estado</th>
+                        <th>CEP</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id-column">5001</td>
+                        <td class="client-id-column">1001</td>
+                        <td class="address-info">Rua das Flores</td>
+                        <td>123</td>
+                        <td class="address-info">Apto 101</td>
+                        <td class="address-info">Centro</td>
+                        <td class="address-info">São Paulo</td>
+                        <td><span class="badge badge-primary">SP</span></td>
+                        <td>01234-567</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">5002</td>
+                        <td class="client-id-column">1002</td>
+                        <td class="address-info">Avenida Brasil</td>
+                        <td>456</td>
+                        <td class="address-info">Casa 2</td>
+                        <td class="address-info">Jardins</td>
+                        <td class="address-info">Rio de Janeiro</td>
+                        <td><span class="badge badge-primary">RJ</span></td>
+                        <td>22345-678</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">5003</td>
+                        <td class="client-id-column">1003</td>
+                        <td class="address-info">Rua das Palmeiras</td>
+                        <td>789</td>
+                        <td class="address-info">Sala 305</td>
+                        <td class="address-info">Savassi</td>
+                        <td class="address-info">Belo Horizonte</td>
+                        <td><span class="badge badge-primary">MG</span></td>
+                        <td>30123-456</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">5004</td>
+                        <td class="client-id-column">1004</td>
+                        <td class="address-info">Avenida Paulista</td>
+                        <td>1001</td>
+                        <td class="address-info">Conjunto 204</td>
+                        <td class="address-info">Bela Vista</td>
+                        <td class="address-info">São Paulo</td>
+                        <td><span class="badge badge-primary">SP</span></td>
+                        <td>01310-100</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">5005</td>
+                        <td class="client-id-column">1005</td>
+                        <td class="address-info">Rua da Praia</td>
+                        <td>200</td>
+                        <td class="address-info">Bloco B</td>
+                        <td class="address-info">Praia do Canto</td>
+                        <td class="address-info">Vitória</td>
+                        <td><span class="badge badge-primary">ES</span></td>
+                        <td>29055-123</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">5006</td>
+                        <td class="client-id-column">1001</td>
+                        <td class="address-info">Rua das Acácias</td>
+                        <td>55</td>
+                        <td class="address-info">Fundos</td>
+                        <td class="address-info">Vila Mariana</td>
+                        <td class="address-info">São Paulo</td>
+                        <td><span class="badge badge-primary">SP</span></td>
+                        <td>04012-345</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gerenciamento de Endereços &copy; 2023</p>
+        </div>
+    </div>
+</body>
+</html>
