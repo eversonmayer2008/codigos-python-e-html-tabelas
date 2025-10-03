@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Funcionários</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            color: #374151;
+            min-width: 150px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            max-width: 400px;
+            border: 1px solid #d1d5db;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            font-size: 1rem;
+            color: #374151;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(5, 150, 105, 0.4);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-left: 4px solid #059669;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #059669;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #f0fdf4;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);
+        }
+        
+        td {
+            padding: 14px 12px;
+            color: #4b5563;
+            vertical-align: middle;
+        }
+        
+        .id-column {
+            font-weight: bold;
+            color: #059669;
+            width: 80px;
+            text-align: center;
+        }
+        
+        .employee-column {
+            font-weight: 600;
+            color: #1f2937;
+            width: 200px;
+        }
+        
+        .contact-column {
+            width: 200px;
+        }
+        
+        .cpf-column {
+            font-family: 'Courier New', monospace;
+            color: #374151;
+            width: 150px;
+        }
+        
+        .position-column {
+            width: 150px;
+        }
+        
+        .date-column {
+            width: 120px;
+            color: #6b7280;
+        }
+        
+        .salary-column {
+            text-align: right;
+            width: 130px;
+            font-weight: 600;
+        }
+        
+        .status-column {
+            width: 120px;
+        }
+        
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .employee-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .employee-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .employee-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .employee-id {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .contact-email, .contact-phone {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .position-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .position-manager {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .position-specialist {
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+        
+        .position-technician {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .position-assistant {
+            background-color: #f3e8ff;
+            color: #7c3aed;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-vacation {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-inactive {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .salary-amount {
+            font-weight: 700;
+            color: #059669;
+        }
+        
+        .salary-period {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 6px;
+            width: 180px;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn-edit {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+        
+        .btn-payroll {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-payroll:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .summary-section {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #dcfce7;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dcfce7;
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #059669;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 5px 8px;
+                font-size: 0.75rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .employee-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .employee-avatar {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Funcionários</h1>
+            <p class="description">Gerencie e acompanhe todas as informações da equipe</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">24</div>
+                <div class="stat-label">Total de Funcionários</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">18</div>
+                <div class="stat-label">Ativos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">R$ 187.5K</div>
+                <div class="stat-label">Folha Mensal</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Departamentos</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="filters">
+                <select class="filter-select">
+                    <option>Todos os Cargos</option>
+                    <option>Gerente</option>
+                    <option>Especialista</option>
+                    <option>Técnico</option>
+                    <option>Assistente</option>
+                </select>
+                <select class="filter-select">
+                    <option>Todos os Status</option>
+                    <option>Ativo</option>
+                    <option>Férias</option>
+                    <option>Inativo</option>
+                </select>
+                <select class="filter-select">
+                    <option>Ordenar por</option>
+                    <option>Nome A-Z</option>
+                    <option>Data Admissão</option>
+                    <option>Maior Salário</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar funcionários...">
+            </div>
+            <button class="btn-add">
+                <span>+</span> Novo Funcionário
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Funcionário</th>
+                        <th>Contato</th>
+                        <th>CPF</th>
+                        <th>Cargo</th>
+                        <th>Admissão</th>
+                        <th>Salário</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id-column">1001</td>
+                        <td class="employee-column">
+                            <div class="employee-info">
+                                <div class="employee-avatar">CS</div>
+                                <div class="employee-details">
+                                    <div class="employee-name">Carlos Silva</div>
+                                    <div class="employee-id">ID: FUNC-1001</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="contact-column">
+                            <div class="contact-info">
+                                <div class="contact-email">carlos.silva@empresa.com</div>
+                                <div class="contact-phone">(11) 99999-9999</div>
+                            </div>
+                        </td>
+                        <td class="cpf-column">123.456.789-00</td>
+                        <td class="position-column">
+                            <span class="position-badge position-manager">Gerente</span>
+                        </td>
+                        <td class="date-column">15/03/2020</td>
+                        <td class="salary-column">
+                            <div class="salary-amount">R$ 12.500,00</div>
+                            <div class="salary-period">mensal</div>
+                        </td>
+                        <td class="status-column">
+                            <span class="status-badge status-active">Ativo</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-payroll">Folha</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">1002</td>
+                        <td class="employee-column">
+                            <div class="employee-info">
+                                <div class="employee-avatar">AS</div>
+                                <div class="employee-details">
+                                    <div class="employee-name">Ana Santos</div>
+                                    <div class="employee-id">ID: FUNC-1002</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="contact-column">
+                            <div class="contact-info">
+                                <div class="contact-email">ana.santos@empresa.com</div>
+                                <div class="contact-phone">(21) 98888-8888</div>
+                            </div>
+                        </td>
+                        <td class="cpf-column">987.654.321-00</td>
+                        <td class="position-column">
+                            <span class="position-badge position-specialist">Especialista</span>
+                        </td>
+                        <td class="date-column">22/07/2021</td>
+                        <td class="salary-column">
+                            <div class="salary-amount">R$ 8.900,00</div>
+                            <div class="salary-period">mensal</div>
+                        </td>
+                        <td class="status-column">
+                            <span class="status-badge status-vacation">Férias</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-payroll">Folha</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">1003</td>
+                        <td class="employee-column">
+                            <div class="employee-info">
+                                <div class="employee-avatar">PO</div>
+                                <div class="employee-details">
+                                    <div class="employee-name">Pedro Oliveira</div>
+                                    <div class="employee-id">ID: FUNC-1003</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="contact-column">
+                            <div class="contact-info">
+                                <div class="contact-email">pedro.oliveira@empresa.com</div>
+                                <div class="contact-phone">(31) 97777-7777</div>
+                            </div>
+                        </td>
+                        <td class="cpf-column">456.789.123-00</td>
+                        <td class="position-column">
+                            <span class="position-badge position-technician">Técnico</span>
+                        </td>
+                        <td class="date-column">10/11/2022</td>
+                        <td class="salary-column">
+                            <div class="salary-amount">R$ 6.200,00</div>
+                            <div class="salary-period">mensal</div>
+                        </td>
+                        <td class="status-column">
+                            <span class="status-badge status-active">Ativo</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-payroll">Folha</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">1004</td>
+                        <td class="employee-column">
+                            <div class="employee-info">
+                                <div class="employee-avatar">MO</div>
+                                <div class="employee-details">
+                                    <div class="employee-name">Mariana Oliveira</div>
+                                    <div class="employee-id">ID: FUNC-1004</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="contact-column">
+                            <div class="contact-info">
+                                <div class="contact-email">mariana.oliveira@empresa.com</div>
+                                <div class="contact-phone">(41) 96666-6666</div>
+                            </div>
+                        </td>
+                        <td class="cpf-column">789.123.456-00</td>
+                        <td class="position-column">
+                            <span class="position-badge position-assistant">Assistente</span>
+                        </td>
+                        <td class="date-column">05/01/2023</td>
+                        <td class="salary-column">
+                            <div class="salary-amount">R$ 3.800,00</div>
+                            <div class="salary-period">mensal</div>
+                        </td>
+                        <td class="status-column">
+                            <span class="status-badge status-active">Ativo</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-payroll">Folha</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">1005</td>
+                        <td class="employee-column">
+                            <div class="employee-info">
+                                <div class="employee-avatar">RA</div>
+                                <div class="employee-details">
+                                    <div class="employee-name">Ricardo Almeida</div>
+                                    <div class="employee-id">ID: FUNC-1005</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="contact-column">
+                            <div class="contact-info">
+                                <div class="contact-email">ricardo.almeida@empresa.com</div>
+                                <div class="contact-phone">(51) 95555-5555</div>
+                            </div>
+                        </td>
+                        <td class="cpf-column">321.654.987-00</td>
+                        <td class="position-column">
+                            <span class="position-badge position-specialist">Especialista</span>
+                        </td>
+                        <td class="date-column">30/09/2021</td>
+                        <td class="salary-column">
+                            <div class="salary-amount">R$ 9.500,00</div>
+                            <div class="salary-period">mensal</div>
+                        </td>
+                        <td class="status-column">
+                            <span class="status-badge status-inactive">Inativo</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="summary-section">
+                <div class="summary-row">
+                    <span>Total de Funcionários Ativos:</span>
+                    <span>18 funcionários</span>
+                </div>
+                <div class="summary-row">
+                    <span>Folha de Pagamento Mensal:</span>
+                    <span>R$ 187.520,00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Salário Médio:</span>
+                    <span style="color: #059669; font-weight: 700;">R$ 10.417,78</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gestão de Funcionários &copy; 2023 | Controle completo da sua equipe</p>
+        </div>
+    </div>
+</body>
+</html>
