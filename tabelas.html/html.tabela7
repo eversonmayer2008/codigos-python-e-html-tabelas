@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            color: #374151;
+            min-width: 150px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            max-width: 400px;
+            border: 1px solid #d1d5db;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            font-size: 1rem;
+            color: #374151;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(220, 38, 38, 0.4);
+        }
+        
+        .alert-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        
+        .alert-banner.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .alert-banner.danger {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #dc2626;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #fef2f2;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.1);
+        }
+        
+        tbody tr.low-stock {
+            background-color: #fef3c7;
+        }
+        
+        tbody tr.critical-stock {
+            background-color: #fef2f2;
+        }
+        
+        td {
+            padding: 14px 12px;
+            color: #4b5563;
+            vertical-align: middle;
+        }
+        
+        .id-column {
+            font-weight: bold;
+            color: #dc2626;
+            width: 80px;
+            text-align: center;
+        }
+        
+        .product-column {
+            font-weight: 600;
+            color: #1f2937;
+            width: 200px;
+        }
+        
+        .quantity-column {
+            text-align: center;
+            width: 120px;
+        }
+        
+        .min-quantity-column {
+            text-align: center;
+            width: 120px;
+            color: #6b7280;
+        }
+        
+        .location-column {
+            width: 150px;
+        }
+        
+        .status-column {
+            width: 140px;
+        }
+        
+        .stock-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stock-bar {
+            flex-grow: 1;
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .stock-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .fill-good {
+            background-color: #10b981;
+        }
+        
+        .fill-warning {
+            background-color: #f59e0b;
+        }
+        
+        .fill-danger {
+            background-color: #ef4444;
+        }
+        
+        .stock-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .badge-good {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .location-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 6px;
+            width: 160px;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn-edit {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+        
+        .btn-transfer {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-transfer:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-alert {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-alert:hover {
+            background-color: #dc2626;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 5px 8px;
+                font-size: 0.75rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Controle de Estoque</h1>
+            <p class="description">Acompanhe e gerencie os níveis de estoque dos seus produtos</p>
+        </header>
+        
+        <div class="alert-banner warning">
+            <strong>⚠ Atenção:</strong> 3 produtos estão com estoque baixo e precisam de reposição
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">156</div>
+                <div class="stat-label">Itens em Estoque</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">R$ 284.750</div>
+                <div class="stat-label">Valor Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Estoques Baixos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Localizações</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="filters">
+                <select class="filter-select">
+                    <option>Todas as Localizações</option>
+                    <option>Armazém A</option>
+                    <option>Armazém B</option>
+                    <option>Loja Centro</option>
+                </select>
+                <select class="filter-select">
+                    <option>Todos os Status</option>
+                    <option>Estoque Normal</option>
+                    <option>Estoque Baixo</option>
+                    <option>Estoque Crítico</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar produtos no estoque...">
+            </div>
+            <button class="btn-add">
+                <span>+</span> Nova Entrada
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Estoque</th>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Mínimo</th>
+                        <th>Status</th>
+                        <th>Localização</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="critical-stock">
+                        <td class="id-column">401</td>
+                        <td class="product-column">iPhone 14 Pro</td>
+                        <td class="quantity-column">
+                            <strong style="color: #ef4444;">2</strong>
+                        </td>
+                        <td class="min-quantity-column">10</td>
+                        <td class="status-column">
+                            <div class="stock-indicator">
+                                <div class="stock-bar">
+                                    <div class="stock-fill fill-danger" style="width: 20%"></div>
+                                </div>
+                                <span class="stock-badge badge-danger">Crítico</span>
+                            </div>
+                        </td>
+                        <td class="location-column">
+                            <span class="location-badge">Armazém A</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-transfer">Transferir</button>
+                            <button class="btn btn-alert">Repor</button>
+                        </td>
+                    </tr>
+                    <tr class="low-stock">
+                        <td class="id-column">402</td>
+                        <td class="product-column">Air Max 270</td>
+                        <td class="quantity-column">
+                            <strong style="color: #f59e0b;">8</strong>
+                        </td>
+                        <td class="min-quantity-column">15</td>
+                        <td class="status-column">
+                            <div class="stock-indicator">
+                                <div class="stock-bar">
+                                    <div class="stock-fill fill-warning" style="width: 53%"></div>
+                                </div>
+                                <span class="stock-badge badge-warning">Baixo</span>
+                            </div>
+                        </td>
+                        <td class="location-column">
+                            <span class="location-badge">Loja Centro</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-transfer">Transferir</button>
+                            <button class="btn btn-alert">Repor</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">403</td>
+                        <td class="product-column">Galaxy S23 Ultra</td>
+                        <td class="quantity-column">
+                            <strong style="color: #10b981;">25</strong>
+                        </td>
+                        <td class="min-quantity-column">12</td>
+                        <td class="status-column">
+                            <div class="stock-indicator">
+                                <div class="stock-bar">
+                                    <div class="stock-fill fill-good" style="width: 100%"></div>
+                                </div>
+                                <span class="stock-badge badge-good">Normal</span>
+                            </div>
+                        </td>
+                        <td class="location-column">
+                            <span class="location-badge">Armazém B</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Ajustar</button>
+                            <button class="btn btn-transfer">Transferir</button>
+                        </td>
+                    </tr>
+                    <tr class="low-stock">
+                        <td class="id-column">404</td>
+                        <td class="product-column">PlayStation 5</td>
+                        <td class="quantity-column">
+                            <strong style="color: #f59e0b;">5</strong>
+                        </td>
+                        <td class="min-quantity-column">8</td>
+                        <td class="status-column">
+                            <div class="stock-indicator">
+                                <div class="stock-bar">
+                                    <div class="stock-fill fill-warning" style="width: 63%"></div>
+                                </div>
+                                <span class="stock-badge badge-warning">Baixo</span>
+                            </div>
+                        </td>
+                        <td class="location-column">
+                            <span class="location-badge">Armazém A</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-transfer">Transferir</button>
+                            <button class="btn btn-alert">Repor</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">405</td>
+                        <td class="product-column">ThinkPad X1 Carbon</td>
+                        <td class="quantity-column">
+                            <strong style="color: #10b981;">18</strong>
+                        </td>
+                        <td class="min-quantity-column">10</td>
+                        <td class="status-column">
+                            <div class="stock-indicator">
+                                <div class="stock-bar">
+                                    <div class="stock-fill fill-good" style="width: 100%"></div>
+                                </div>
+                                <span class="stock-badge badge-good">Normal</span>
+                            </div>
+                        </td>
+                        <td class="location-column">
+                            <span class="location-badge">Armazém B</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Ajustar</button>
+                            <button class="btn btn-transfer">Transferir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">406</td>
+                        <td class="product-column">MacBook Pro 14"</td>
+                        <td class="quantity-column">
+                            <strong style="color: #10b981;">15</strong>
+                        </td>
+                        <td class="min-quantity-column">8</td>
+                        <td class="status-column">
+                            <div class="stock-indicator">
+                                <div class="stock-bar">
+                                    <div class="stock-fill fill-good" style="width: 100%"></div>
+                                </div>
+                                <span class="stock-badge badge-good">Normal</span>
+                            </div>
+                        </td>
+                        <td class="location-column">
+                            <span class="location-badge">Loja Centro</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Ajustar</button>
+                            <button class="btn btn-transfer">Transferir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Controle de Estoque &copy; 2023 | Mantenha seu inventário sempre organizado</p>
+        </div>
+    </div>
+</body>
+</html>
