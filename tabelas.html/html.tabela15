@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Manutenções</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e1e5eb;
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f1f7fd;
+        }
+        
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        td {
+            padding: 14px 12px;
+            font-size: 0.95rem;
+        }
+        
+        .text-cell {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .currency {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        .actions {
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            margin: 0 3px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-edit {
+            background-color: #2ecc71;
+        }
+        
+        .btn-edit:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-delete {
+            background-color: #e74c3c;
+        }
+        
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            table {
+                min-width: 800px;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Manutenções</h1>
+            <p class="description">Registro completo de todas as manutenções realizadas, incluindo diagnósticos, peças utilizadas e custos associados.</p>
+        </header>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Manutenção</th>
+                        <th>ID Agendamento</th>
+                        <th>Data Início</th>
+                        <th>Data Fim</th>
+                        <th>Diagnóstico</th>
+                        <th>Peças Utilizadas</th>
+                        <th>Observações</th>
+                        <th>Custo Peças</th>
+                        <th>Custo Serviço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1001</td>
+                        <td>2001</td>
+                        <td>2023-10-15 09:00</td>
+                        <td>2023-10-15 12:30</td>
+                        <td class="text-cell">Troca de óleo e filtros</td>
+                        <td class="text-cell">Óleo 5W30, Filtro de óleo, Filtro de ar</td>
+                        <td class="text-cell">Veículo apresentava ruído no motor</td>
+                        <td class="currency">R$ 180,00</td>
+                        <td class="currency">R$ 120,00</td>
+                        <td class="actions">
+                            <a href="#" class="btn btn-edit">Editar</a>
+                            <a href="#" class="btn btn-delete">Excluir</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1002</td>
+                        <td>2003</td>
+                        <td>2023-10-16 14:00</td>
+                        <td>2023-10-16 16:45</td>
+                        <td class="text-cell">Alinhamento e balanceamento</td>
+                        <td class="text-cell">Pesos para balanceamento</td>
+                        <td class="text-cell">Cliente relatou vibração no volante em alta velocidade</td>
+                        <td class="currency">R$ 25,00</td>
+                        <td class="currency">R$ 80,00</td>
+                        <td class="actions">
+                            <a href="#" class="btn btn-edit">Editar</a>
+                            <a href="#" class="btn btn-delete">Excluir</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1003</td>
+                        <td>2005</td>
+                        <td>2023-10-18 10:30</td>
+                        <td>2023-10-18 15:20</td>
+                        <td class="text-cell">Substituição de pastilhas de freio</td>
+                        <td class="text-cell">Pastilhas de freio dianteiras, Líquido de freio</td>
+                        <td class="text-cell">Freios dianteiros apresentavam ruído e baixa eficiência</td>
+                        <td class="currency">R$ 320,00</td>
+                        <td class="currency">R$ 150,00</td>
+                        <td class="actions">
+                            <a href="#" class="btn btn-edit">Editar</a>
+                            <a href="#" class="btn btn-delete">Excluir</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1004</td>
+                        <td>2007</td>
+                        <td>2023-10-20 08:00</td>
+                        <td>2023-10-20 17:30</td>
+                        <td class="text-cell">Reparo no sistema de ar condicionado</td>
+                        <td class="text-cell">Compressor, Gás refrigerante, Filtro de cabine</td>
+                        <td class="text-cell">Ar condicionado não estava gelando</td>
+                        <td class="currency">R$ 850,00</td>
+                        <td class="currency">R$ 300,00</td>
+                        <td class="actions">
+                            <a href="#" class="btn btn-edit">Editar</a>
+                            <a href="#" class="btn btn-delete">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gerenciamento de Manutenções &copy; 2023</p>
+        </div>
+    </div>
+</body>
+</html>
