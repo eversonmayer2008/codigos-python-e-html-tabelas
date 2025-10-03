@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos de Compra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            color: #374151;
+            min-width: 150px;
+        }
+        
+        .date-filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .date-input {
+            padding: 10px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            max-width: 400px;
+            border: 1px solid #d1d5db;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            font-size: 1rem;
+            color: #374151;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(245, 158, 11, 0.4);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f59e0b;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #fffbeb;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
+        }
+        
+        td {
+            padding: 14px 12px;
+            color: #4b5563;
+            vertical-align: middle;
+        }
+        
+        .id-column {
+            font-weight: bold;
+            color: #f59e0b;
+            width: 100px;
+            text-align: center;
+        }
+        
+        .supplier-column {
+            font-weight: 600;
+            color: #1f2937;
+            width: 250px;
+        }
+        
+        .date-column {
+            width: 180px;
+            color: #6b7280;
+        }
+        
+        .value-column {
+            text-align: right;
+            width: 150px;
+            font-weight: 700;
+        }
+        
+        .status-column {
+            width: 140px;
+        }
+        
+        .priority-column {
+            width: 120px;
+        }
+        
+        .supplier-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .supplier-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .supplier-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .supplier-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .supplier-cnpj {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-approved {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-delivered {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-cancelled {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .priority-high {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .priority-medium {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        
+        .priority-low {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 6px;
+            width: 180px;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn-view {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-edit {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+        
+        .btn-cancel {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #dc2626;
+        }
+        
+        .total-section {
+            background: #fffbeb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #fef3c7;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #fef3c7;
+        }
+        
+        .total-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #f59e0b;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 5px 8px;
+                font-size: 0.75rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-select, .date-input {
+                width: 100%;
+            }
+            
+            .date-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pedidos de Compra</h1>
+            <p class="description">Acompanhe e gerencie todos os pedidos de compra realizados com fornecedores</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">18</div>
+                <div class="stat-label">Pedidos em Aberto</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">R$ 284.750</div>
+                <div class="stat-label">Valor Total Pendente</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Fornecedores Ativos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Pedidos Atrasados</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="filters">
+                <select class="filter-select">
+                    <option>Todos os Status</option>
+                    <option>Pendente</option>
+                    <option>Aprovado</option>
+                    <option>Entregue</option>
+                    <option>Cancelado</option>
+                </select>
+                <select class="filter-select">
+                    <option>Todos os Fornecedores</option>
+                    <option>Apple Brasil</option>
+                    <option>Samsung Eletrônicos</option>
+                    <option>Nike do Brasil</option>
+                </select>
+                <div class="date-filter">
+                    <input type="date" class="date-input" placeholder="Data Inicial">
+                    <span>até</span>
+                    <input type="date" class="date-input" placeholder="Data Final">
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar pedidos...">
+            </div>
+            <button class="btn-add">
+                <span>+</span> Novo Pedido
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Fornecedor</th>
+                        <th>Data do Pedido</th>
+                        <th>Valor Total</th>
+                        <th>Status</th>
+                        <th>Prioridade</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id-column">PC-701</td>
+                        <td class="supplier-column">
+                            <div class="supplier-info">
+                                <div class="supplier-logo">AP</div>
+                                <div class="supplier-details">
+                                    <div class="supplier-name">Apple Brasil Ltda</div>
+                                    <div class="supplier-cnpj">12.345.678/0001-90</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="date-column">15/05/2023 14:30</td>
+                        <td class="value-column">R$ 45.890,00</td>
+                        <td class="status-column">
+                            <span class="status-badge status-pending">Pendente</span>
+                        </td>
+                        <td class="priority-column">
+                            <span class="priority-badge priority-high">Alta</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-view">Detalhes</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">PC-702</td>
+                        <td class="supplier-column">
+                            <div class="supplier-info">
+                                <div class="supplier-logo">SM</div>
+                                <div class="supplier-details">
+                                    <div class="supplier-name">Samsung Eletrônicos</div>
+                                    <div class="supplier-cnpj">98.765.432/0001-10</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="date-column">14/05/2023 10:15</td>
+                        <td class="value-column">R$ 28.750,00</td>
+                        <td class="status-column">
+                            <span class="status-badge status-approved">Aprovado</span>
+                        </td>
+                        <td class="priority-column">
+                            <span class="priority-badge priority-medium">Média</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-view">Detalhes</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">PC-703</td>
+                        <td class="supplier-column">
+                            <div class="supplier-info">
+                                <div class="supplier-logo">NK</div>
+                                <div class="supplier-details">
+                                    <div class="supplier-name">Nike do Brasil</div>
+                                    <div class="supplier-cnpj">45.678.123/0001-55</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="date-column">12/05/2023 16:45</td>
+                        <td class="value-column">R$ 12.340,00</td>
+                        <td class="status-column">
+                            <span class="status-badge status-delivered">Entregue</span>
+                        </td>
+                        <td class="priority-column">
+                            <span class="priority-badge priority-low">Baixa</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-view">Detalhes</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">PC-704</td>
+                        <td class="supplier-column">
+                            <div class="supplier-info">
+                                <div class="supplier-logo">AD</div>
+                                <div class="supplier-details">
+                                    <div class="supplier-name">Adidas Brasil</div>
+                                    <div class="supplier-cnpj">67.890.123/0001-44</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="date-column">10/05/2023 09:20</td>
+                        <td class="value-column">R$ 8.550,00</td>
+                        <td class="status-column">
+                            <span class="status-badge status-cancelled">Cancelado</span>
+                        </td>
+                        <td class="priority-column">
+                            <span class="priority-badge priority-medium">Média</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-view">Detalhes</button>
+                            <button class="btn btn-cancel">Reativar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">PC-705</td>
+                        <td class="supplier-column">
+                            <div class="supplier-info">
+                                <div class="supplier-logo">MM</div>
+                                <div class="supplier-details">
+                                    <div class="supplier-name">Móveis Modernos SA</div>
+                                    <div class="supplier-cnpj">23.456.789/0001-33</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="date-column">08/05/2023 11:30</td>
+                        <td class="value-column">R$ 32.180,00</td>
+                        <td class="status-column">
+                            <span class="status-badge status-pending">Pendente</span>
+                        </td>
+                        <td class="priority-column">
+                            <span class="priority-badge priority-high">Alta</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-view">Detalhes</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">PC-706</td>
+                        <td class="supplier-column">
+                            <div class="supplier-info">
+                                <div class="supplier-logo">AL</div>
+                                <div class="supplier-details">
+                                    <div class="supplier-name">Alimentos Naturais Ltda</div>
+                                    <div class="supplier-cnpj">34.567.890/0001-22</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="date-column">05/05/2023 13:10</td>
+                        <td class="value-column">R$ 5.670,00</td>
+                        <td class="status-column">
+                            <span class="status-badge status-approved">Aprovado</span>
+                        </td>
+                        <td class="priority-column">
+                            <span class="priority-badge priority-low">Baixa</span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn btn-view">Detalhes</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="total-section">
+                <div class="total-row">
+                    <span>Total de Pedidos Pendentes:</span>
+                    <span>2 pedidos</span>
+                </div>
+                <div class="total-row">
+                    <span>Valor Total Pendente:</span>
+                    <span>R$ 78.070,00</span>
+                </div>
+                <div class="total-row">
+                    <span>Valor Total Geral:</span>
+                    <span style="color: #f59e0b; font-weight: 700;">R$ 133.380,00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gestão de Pedidos de Compra &copy; 2023 | Controle completo das suas aquisições</p>
+        </div>
+    </div>
+</body>
+</html>
