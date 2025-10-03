@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Marcas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            max-width: 400px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            font-size: 1rem;
+            color: #334155;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.4);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4f46e5;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8faff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+        }
+        
+        td {
+            padding: 16px 15px;
+            color: #475569;
+            vertical-align: top;
+        }
+        
+        .id-column {
+            font-weight: bold;
+            color: #4f46e5;
+            width: 80px;
+            text-align: center;
+        }
+        
+        .name-column {
+            font-weight: 600;
+            color: #1e293b;
+            width: 180px;
+        }
+        
+        .description-column {
+            color: #64748b;
+            line-height: 1.5;
+            max-width: 500px;
+        }
+        
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 12px;
+        }
+        
+        .brand-header {
+            display: flex;
+            align-items: center;
+        }
+        
+        .brand-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-inactive {
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+            width: 150px;
+        }
+        
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn-edit {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+        
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #64748b;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .brand-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .brand-logo {
+                margin-bottom: 5px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .table-container {
+                border-radius: 8px;
+            }
+            
+            .name-column {
+                width: 140px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gerenciar Marcas</h1>
+            <p class="description">Controle e organize as marcas do seu catálogo de produtos</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Marcas Cadastradas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Marcas Ativas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Marcas Inativas</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" placeholder="Buscar marcas...">
+            </div>
+            <button class="btn-add">
+                <span>+</span> Nova Marca
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id-column">201</td>
+                        <td class="name-column">
+                            <div class="brand-header">
+                                <div class="brand-logo">NK</div>
+                                <div>
+                                    <div class="brand-name">Nike</div>
+                                    <span class="status-badge status-active">Ativa</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="description-column">Marca líder mundial em artigos esportivos, calçados, equipamentos e acessórios. Conhecida pelo slogan "Just Do It".</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">202</td>
+                        <td class="name-column">
+                            <div class="brand-header">
+                                <div class="brand-logo">AP</div>
+                                <div>
+                                    <div class="brand-name">Apple</div>
+                                    <span class="status-badge status-active">Ativa</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="description-column">Empresa multinacional que desenvolve e vende produtos eletrônicos, softwares e serviços online. Conhecida por inovação e design.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">203</td>
+                        <td class="name-column">
+                            <div class="brand-header">
+                                <div class="brand-logo">SM</div>
+                                <div>
+                                    <div class="brand-name">Samsung</div>
+                                    <span class="status-badge status-active">Ativa</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="description-column">Conglomerado sul-coreano que atua em diversos setores, com destaque para eletrônicos, smartphones e eletrodomésticos.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">204</td>
+                        <td class="name-column">
+                            <div class="brand-header">
+                                <div class="brand-logo">AD</div>
+                                <div>
+                                    <div class="brand-name">Adidas</div>
+                                    <span class="status-badge status-active">Ativa</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="description-column">Empresa alemã fabricante de calçados, roupas e acessórios esportivos. Conhecida pelas três listras características.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">205</td>
+                        <td class="name-column">
+                            <div class="brand-header">
+                                <div class="brand-logo">SN</div>
+                                <div>
+                                    <div class="brand-name">Sony</div>
+                                    <span class="status-badge status-inactive">Inativa</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="description-column">Conglomerado japonês diversificado que atua em eletrônicos, jogos, entretenimento e serviços financeiros.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">206</td>
+                        <td class="name-column">
+                            <div class="brand-header">
+                                <div class="brand-logo">LV</div>
+                                <div>
+                                    <div class="brand-name">Lenovo</div>
+                                    <span class="status-badge status-active">Ativa</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="description-column">Empresa chinesa de tecnologia que fabrica computadores pessoais, tablets, smartphones e outros equipamentos eletrônicos.</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Editar</button>
+                            <button class="btn btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gerenciamento de Marcas &copy; 2023 | Gerencie suas marcas de forma eficiente</p>
+        </div>
+    </div>
+</body>
+</html>
