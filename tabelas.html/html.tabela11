@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itens de Pedido de Compra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .order-info {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            color: #374151;
+            min-width: 150px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            max-width: 400px;
+            border: 1px solid #d1d5db;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            font-size: 1rem;
+            color: #374151;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .summary-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8b5cf6;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #faf5ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
+        }
+        
+        td {
+            padding: 14px 12px;
+            color: #4b5563;
+            vertical-align: middle;
+        }
+        
+        .id-column {
+            font-weight: bold;
+            color: #8b5cf6;
+            width: 80px;
+            text-align: center;
+        }
+        
+        .order-id-column {
+            font-weight: 600;
+            color: #1f2937;
+            width: 120px;
+            text-align: center;
+        }
+        
+        .product-column {
+            font-weight: 600;
+            color: #1f2937;
+            width: 250px;
+        }
+        
+        .quantity-column {
+            text-align: center;
+            width: 120px;
+        }
+        
+        .price-column {
+            text-align: right;
+            width: 140px;
+            font-weight: 600;
+        }
+        
+        .total-column {
+            text-align: right;
+            width: 150px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+        
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .product-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .product-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .product-sku {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        
+        .quantity-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+        
+        .stock-info {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 6px;
+            width: 140px;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn-edit {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+        
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+        
+        .btn-view {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background-color: #2563eb;
+        }
+        
+        .total-section {
+            background: #faf5ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #e9d5ff;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9d5ff;
+        }
+        
+        .total-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #8b5cf6;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 5px 8px;
+                font-size: 0.75rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .product-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .product-image {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Itens de Pedido de Compra</h1>
+            <p class="description">Detalhamento completo dos produtos solicitados em cada pedido de compra</p>
+        </header>
+        
+        <div class="order-info">
+            <div class="order-header">
+                <h2 style="color: #8b5cf6;">Pedido de Compra #PC-701</h2>
+                <div style="display: flex; gap: 15px;">
+                    <span class="detail-card">
+                        <div class="detail-label">Fornecedor</div>
+                        <div class="detail-value">Apple Brasil Ltda</div>
+                    </span>
+                    <span class="detail-card">
+                        <div class="detail-label">Data do Pedido</div>
+                        <div class="detail-value">15/05/2023 14:30</div>
+                    </span>
+                </div>
+            </div>
+            <div class="order-details">
+                <div class="detail-card">
+                    <div class="detail-label">Status do Pedido</div>
+                    <div class="detail-value" style="color: #92400e;">Pendente</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-label">CNPJ Fornecedor</div>
+                    <div class="detail-value">12.345.678/0001-90</div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-label">Prioridade</div>
+                    <div class="detail-value" style="color: #dc2626;">Alta</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="summary-number">8</div>
+                <div class="summary-label">Itens Solicitados</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">R$ 45.890,00</div>
+                <div class="summary-label">Valor Total</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">152</div>
+                <div class="summary-label">Unidades</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">5</div>
+                <div class="summary-label">Categorias</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="filters">
+                <select class="filter-select">
+                    <option>Todos os Pedidos</option>
+                    <option>PC-701</option>
+                    <option>PC-702</option>
+                    <option>PC-703</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar itens por produto...">
+            </div>
+            <button class="btn-add">
+                <span>+</span> Adicionar Item
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Item</th>
+                        <th>ID Pedido</th>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Preço Unitário</th>
+                        <th>Total Item</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id-column">801</td>
+                        <td class="order-id-column">PC-701</td>
+                        <td class="product-column">
+                            <div class="product-info">
+                                <div class="product-image">IP14</div>
+                                <div class="product-details">
+                                    <div class="product-name">iPhone 14 Pro 128GB</div>
+                                    <div class="product-sku">SKU: APL-IP14P-128</div>
+                                    <div class="stock-info">Estoque atual: 2 unidades</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="quantity-column">
+                            <span class="quantity-badge">25</span>
+                        </td>
+                        <td class="price-column">R$ 6.999,00</td>
+                        <td class="total-column">R$ 174.975,00</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">802</td>
+                        <td class="order-id-column">PC-701</td>
+                        <td class="product-column">
+                            <div class="product-info">
+                                <div class="product-image">AP</div>
+                                <div class="product-details">
+                                    <div class="product-name">AirPods Pro 2ª Geração</div>
+                                    <div class="product-sku">SKU: APL-APP2-001</div>
+                                    <div class="stock-info">Estoque atual: 8 unidades</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="quantity-column">
+                            <span class="quantity-badge">15</span>
+                        </td>
+                        <td class="price-column">R$ 1.299,00</td>
+                        <td class="total-column">R$ 19.485,00</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">803</td>
+                        <td class="order-id-column">PC-701</td>
+                        <td class="product-column">
+                            <div class="product-info">
+                                <div class="product-image">AW</div>
+                                <div class="product-details">
+                                    <div class="product-name">Apple Watch Series 8</div>
+                                    <div class="product-sku">SKU: APL-AWS8-045</div>
+                                    <div class="stock-info">Estoque atual: 5 unidades</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="quantity-column">
+                            <span class="quantity-badge">12</span>
+                        </td>
+                        <td class="price-column">R$ 2.899,00</td>
+                        <td class="total-column">R$ 34.788,00</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">804</td>
+                        <td class="order-id-column">PC-702</td>
+                        <td class="product-column">
+                            <div class="product-info">
+                                <div class="product-image">GS23</div>
+                                <div class="product-details">
+                                    <div class="product-name">Galaxy S23 Ultra 256GB</div>
+                                    <div class="product-sku">SKU: SAM-GS23U-256</div>
+                                    <div class="stock-info">Estoque atual: 18 unidades</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="quantity-column">
+                            <span class="quantity-badge">20</span>
+                        </td>
+                        <td class="price-column">R$ 5.499,00</td>
+                        <td class="total-column">R$ 109.980,00</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">805</td>
+                        <td class="order-id-column">PC-702</td>
+                        <td class="product-column">
+                            <div class="product-info">
+                                <div class="product-image">GB</div>
+                                <div class="product-details">
+                                    <div class="product-name">Galaxy Buds2 Pro</div>
+                                    <div class="product-sku">SKU: SAM-GB2P-001</div>
+                                    <div class="stock-info">Estoque atual: 12 unidades</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="quantity-column">
+                            <span class="quantity-badge">25</span>
+                        </td>
+                        <td class="price-column">R$ 899,00</td>
+                        <td class="total-column">R$ 22.475,00</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="id-column">806</td>
+                        <td class="order-id-column">PC-703</td>
+                        <td class="product-column">
+                            <div class="product-info">
+                                <div class="product-image">AM</div>
+                                <div class="product-details">
+                                    <div class="product-name">Air Max 270 React</div>
+                                    <div class="product-sku">SKU: NIK-AM270-RCT</div>
+                                    <div class="stock-info">Estoque atual: 8 unidades</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="quantity-column">
+                            <span class="quantity-badge">45</span>
+                        </td>
+                        <td class="price-column">R$ 349,90</td>
+                        <td class="total-column">R$ 15.745,50</td>
+                        <td class="actions">
+                            <button class="btn btn-view">Ver</button>
+                            <button class="btn btn-edit">Editar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="total-section">
+                <div class="total-row">
+                    <span>Subtotal dos Itens:</span>
+                    <span>R$ 377.448,50</span>
+                </div>
+                <div class="total-row">
+                    <span>Frete e Impostos:</span>
+                    <span>R$ 12.551,50</span>
+                </div>
+                <div class="total-row">
+                    <span>Valor Total dos Pedidos:</span>
+                    <span style="color: #8b5cf6; font-weight: 700;">R$ 390.000,00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gestão de Itens de Pedido de Compra &copy; 2023 | Controle detalhado das suas aquisições</p>
+        </div>
+    </div>
+</body>
+</html>
